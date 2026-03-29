@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Clinic Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Clinic Admin Dashboard</h1>
+
+<div class="top-bar">
+  <input type="text" id="searchBox" placeholder="Search patient or service...">
+  <button onclick="loadDashboard(); alert('✅ Dashboard refreshed!');" style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 0 5px; font-weight: bold;">🔄 Refresh Data</button>
+  <button onclick="exportTable()" style="background-color: #2196F3; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 0 5px; font-weight: bold;">📥 Export CSV</button>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Total Appointments</h2>
+    <p id="totalAppointments">Loading...</p>
+  </div>
+  <div class="card">
+    <h2>Estimated Revenue</h2>
+    <p id="revenue">Loading...</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card large">
+    <h2>Appointments by Service</h2>
+    <canvas id="serviceChart"></canvas>
+  </div>
+
+  <div class="card large">
+    <h2>Appointments by City</h2>
+    <canvas id="cityChart"></canvas>
+  </div>
+
+  <div class="card large">
+    <h2>Emotion Analysis</h2>
+    <canvas id="emotionChart"></canvas>
+  </div>
+</div>
+
+<div class="card wide">
+  <h2>Recent Appointments</h2>
+  <table id="apptTable">
+    <thead>
+      <tr>
+        <th>Confirmation</th><th>Name</th><th>Service</th><th>Date</th><th>Time</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="theme-color" content="#3B82F6">
+    <title>Smile Dental Clinic - AI Receptionist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            animation: pulseBg 8s ease-in-out infinite;
+        }
+
+        @keyframes pulseBg {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 320px 1fr 360px;
+            transition: all 0.3s ease;
+        }
+
+        .side-panel {
+            background: linear-gradient(180deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+            padding: 28px;
+            border-right: 1px solid rgba(229, 231, 235, 0.5);
+            overflow-y: auto;
+            max-height: 90vh;
+            backdrop-filter: blur(10px);
+        }
+
+        .side-panel.right {
+            border-right: none;
+            border-left: 1px solid rgba(229, 231, 235, 0.5);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-color: #3B82F6;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #6B7280;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1F2937;
+            word-break: break-word;
+        }
+
+        .main-panel {
+            padding: 36px;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .logo i {
+            font-size: 56px;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6, #EC489A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            color: #6B7280;
+            font-size: 13px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .call-controls {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 24px 0;
+        }
+
+        .control-btn {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            border: none;
+            font-size: 36px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .control-btn:active::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .control-btn.start {
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .control-btn.end {
+            background: linear-gradient(135deg, #EF4444, #F87171);
+            color: white;
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+        }
+
+        .control-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            transform: scale(1);
+            cursor: not-allowed;
+        }
+
+        .status-display {
+            background: linear-gradient(135deg, white, #F9FAFB);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .status-display.active {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .status-text {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #1F2937, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .instruction-text {
+            color: #6B7280;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .call-timer {
+            font-size: 32px;
+            font-weight: 800;
+            color: #3B82F6;
+            font-feature-settings: "tnum";
+        }
+
+        .listening-indicator {
+            display: none;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .listening-indicator.active {
+            display: flex;
+        }
+
+        .pulse-dot {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            animation: pulse 1.2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
+            50% { transform: scale(1.08); opacity: 0.9; box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); }
+            100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        .email-buffer {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            padding: 14px 18px;
+            border-radius: 16px;
+            margin: 12px 0;
+            font-size: 13px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #F59E0B;
+            animation: slideInLeft 0.3s ease;
+        }
+
+        .email-buffer.show {
+            display: flex;
+        }
+
+        .buffer-text {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-weight: bold;
+            color: #D97706;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .transcript-container {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .transcript {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 16px;
+            padding-right: 8px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            animation: slideIn 0.3s ease;
+            transition: all 0.2s ease;
+        }
+
+        .message.system {
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            border-left: 4px solid #3B82F6;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+            border-left: 4px solid #10B981;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #6B7280;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #1F2937;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+            border-radius: 100px;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #9CA3AF;
+            font-weight: 500;
+        }
+
+        /* Modern Language Selection - 4 Cards Layout */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #FFFFFF, #F9FAFB);
+            padding: 48px 40px;
+            border-radius: 48px;
+            text-align: center;
+            max-width: 1000px;
+            width: 90%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .modal-icon i {
+            font-size: 40px;
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #1F2937, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-subtitle {
+            color: #6B7280;
+            font-size: 15px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* 4-Card Language Grid */
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .language-card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px 20px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #E5E7EB;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .language-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .language-card:hover {
+            transform: translateY(-8px);
+            border-color: #3B82F6;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .language-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .language-flag {
+            font-size: 56px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+        }
+
+        .language-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #1F2937, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .language-native {
+            font-size: 13px;
+            color: #6B7280;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .language-select-indicator {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 36px;
+            height: 36px;
+            background: #3B82F6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 14px;
+        }
+
+        .language-card:hover .language-select-indicator {
+            opacity: 1;
+            bottom: 20px;
+        }
+
+        .debug-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .debug-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 14px 24px;
+            background: #1F2937;
+            color: white;
+            border-radius: 100px;
+            display: none;
+            z-index: 1000;
+            font-weight: 500;
+            font-size: 14px;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #F3F4F6;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 280px 1fr 300px;
+            }
+            .language-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .side-panel {
+                display: none;
+            }
+            .main-panel {
+                padding: 24px;
+                height: auto;
+                min-height: 90vh;
+            }
+            .control-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+            .modal-content {
+                padding: 32px 24px;
+            }
+            .modal-title {
+                font-size: 24px;
+            }
+            .language-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .language-card {
+                padding: 20px;
+            }
+            .language-flag {
+                font-size: 48px;
+            }
+            .language-name {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-panel {
+                padding: 16px;
+            }
+            .control-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            .status-text {
+                font-size: 18px;
+            }
+            .call-timer {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="toast" class="toast"></div>
+    
+    <!-- Modern 4-Card Language Selection Modal -->
+    <div id="langModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-globe"></i>
+            </div>
+            <h2 class="modal-title">Choose Your Language</h2>
+            <p class="modal-subtitle">Select your preferred language for conversation.<br>The assistant will speak and understand in this language.</p>
+            <div class="language-grid">
+                <!-- English Card -->
+                <div class="language-card" onclick="selectLanguage('en')">
+                    <div class="language-flag">🇺🇸</div>
+                    <div class="language-name">English</div>
+                    <div class="language-native">English</div>
+                    <div class="language-select-indicator">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- Hindi Card -->
+                <div class="language-card" onclick="selectLanguage('hi')">
+                    <div class="language-flag">🇮🇳</div>
+                    <div class="language-name">हिंदी</div>
+                    <div class="language-native">Hindi</div>
+                    <div class="language-select-indicator">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- Kannada Card -->
+                <div class="language-card" onclick="selectLanguage('kn')">
+                    <div class="language-flag">🇮🇳</div>
+                    <div class="language-name">ಕನ್ನಡ</div>
+                    <div class="language-native">Kannada</div>
+                    <div class="language-select-indicator">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- Telugu Card -->
+                <div class="language-card" onclick="selectLanguage('te')">
+                    <div class="language-flag">🇮🇳</div>
+                    <div class="language-name">తెలుగు</div>
+                    <div class="language-native">Telugu</div>
+                    <div class="language-select-indicator">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="side-panel">
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-circle" style="color: #10B981; font-size: 8px;"></i> System Status</div>
+                <div id="systemStatus" class="info-value">✅ Ready</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-language"></i> Language</div>
+                <div id="currentLang" class="info-value">Not selected</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-tasks"></i> Progress</div>
+                <div id="currentStep" class="info-value">0/8</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-clock"></i> Call Duration</div>
+                <div id="callTimer" class="info-value">00:00</div>
+            </div>
+        </div>
+
+        <div class="main-panel">
+            <div class="logo">
+                <i class="fas fa-tooth"></i>
+                <h1>Smile Dental Clinic AI</h1>
+                <p class="tagline">Voice-Enabled AI Receptionist • Natural Conversation • Multilingual</p>
+            </div>
+
+            <div class="call-controls">
+                <button id="startBtn" class="control-btn start" onclick="startCall()">
+                    <i class="fas fa-phone-alt"></i>
+                </button>
+                <button id="endBtn" class="control-btn end" onclick="endCall()" disabled>
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div class="progress-steps">
+                    <span>Name</span>
+                    <span>Phone</span>
+                    <span>Address</span>
+                    <span>Email</span>
+                    <span>Service</span>
+                    <span>Date</span>
+                    <span>Time</span>
+                    <span>Confirm</span>
+                </div>
+            </div>
+
+            <div class="listening-indicator" id="listeningIndicator">
+                <div class="pulse-dot">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+            </div>
+
+            <div id="emailBuffer" class="email-buffer">
+                <i class="fas fa-envelope" style="color: #F59E0B;"></i>
+                <span>Building email: </span>
+                <span id="bufferText" class="buffer-text"></span>
+                <span style="font-size: 11px; color: #92400E;">(Keep speaking...)</span>
+            </div>
+
+            <div class="status-display" id="statusDisplay">
+                <div class="status-text" id="statusText">Welcome to Smile Dental Clinic</div>
+                <div class="instruction-text" id="instructionText">Click the phone button to start your appointment booking</div>
+                <div class="call-timer" id="callTimerDisplay">--:--</div>
+            </div>
+
+            <div class="transcript-container">
+                <h3 style="font-size: 16px; font-weight: 600; color: #1F2937; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-comments" style="color: #3B82F6;"></i> Live Conversation
+                </h3>
+                <div id="transcript" class="transcript">
+                    <div class="message system">
+                        <div class="message-header">
+                            <span>System</span>
+                            <span>--:--</span>
+                        </div>
+                        <div class="message-text">Welcome! Select your language to begin your dental appointment.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-panel right">
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-calendar-check"></i> Appointment Status</div>
+                <div id="appointmentStatus" class="info-value">⏳ NOT STARTED</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-user"></i> Full Name</div>
+                <div id="patientName" class="info-value">-</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-phone"></i> Phone Number</div>
+                <div id="patientPhone" class="info-value">-</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-envelope"></i> Email Address</div>
+                <div id="patientEmail" class="info-value">-</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-map-marker-alt"></i> Address</div>
+                <div id="patientAddress" class="info-value">-</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-tooth"></i> Service</div>
+                <div id="appointmentService" class="info-value">-</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-calendar-day"></i> Date & Time</div>
+                <div id="appointmentDateTime" class="info-value">-</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label"><i class="fas fa-check-circle"></i> Confirmation ID</div>
+                <div id="confirmationId" class="info-value">-</div>
+            </div>
+            <button class="debug-btn" onclick="if(window.voiceAI) voiceAI.showDebugPanel(); else alert('Voice AI not initialized')">
+                <i class="fas fa-bug"></i> Debug Panel
+            </button>
+        </div>
+    </div>
+
+    <script>
+    // ============================================
+    // MULTILINGUAL EMAIL PARSER
+    // ============================================
+    function cleanMultilingualEmail(transcript) {
+        if (!transcript) return null;
+        
+        let cleaned = transcript.toLowerCase().trim();
+        
+        // KANNADA PHONETICS MAPPING
+        const kannadaMap = {
+            'ಎಟ್': '@', 'ಅಟ್': '@', 'ಅಂ': '@', 'ಾಟ್': '@', 'ಎತ್': '@', 'ಎ ಟ್': '@', 'at': '@', 'ಅತ್': '@',
+            'ಡಾಟ್': '.', 'ಡಾಟ': '.', 'ಡೇಟ್': '.', 'ದಾಟ್': '.', 'dot': '.',
+            'ಜಿಮೇಲ್': 'gmail', 'ಜಿಮೇಲ': 'gmail', 'gmail': 'gmail',
+            'ಕಾಮ್': 'com', 'ಕಾಮ': 'com', 'com': 'com',
+            'ಇನ್': 'in', 'in': 'in', 'ಓರ್ಗ್': 'org', 'org': 'org',
+            'ಮೇಲ್': 'mail', 'mail': 'mail', 'ಆಪಸ್': 'apps', 'apps': 'apps',
+            'ಯಾಹೂ': 'yahoo', 'yahoo': 'yahoo', 'ಹಾಟ್ಮೇಲ್': 'hotmail', 'hotmail': 'hotmail',
+            'ಔಟ್ಲುಕ್': 'outlook', 'outlook': 'outlook'
+        };
+        
+        for (const [kannada, english] of Object.entries(kannadaMap)) {
+            const regex = new RegExp(kannada, 'gi');
+            cleaned = cleaned.replace(regex, english);
+        }
+        
+        cleaned = cleaned.replace(/\bat\b/gi, '@');
+        cleaned = cleaned.replace(/\bdot\b/gi, '.');
+        cleaned = cleaned.replace(/\s+/g, '');
+        cleaned = cleaned.replace(/[^\x00-\x7F@.\-_]/g, '');
+        
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        if (emailPattern.test(cleaned)) {
+            return cleaned;
+        }
+        
+        const domainPatterns = [/gmail\.?com/i, /yahoo\.?com/i, /outlook\.?com/i, /hotmail\.?com/i, /rediff\.?com/i];
+        for (const pattern of domainPatterns) {
+            if (pattern.test(cleaned)) {
+                const match = cleaned.match(/([a-zA-Z0-9._%+-]+)@?([a-zA-Z0-9.-]*)/);
+                if (match && match[1]) {
+                    return match[1] + '@' + (pattern.exec(cleaned)?.[0] || 'gmail.com');
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    class DentalVoiceAI {
+        constructor() {
+            this.isActive = false;
+            this.currentStep = 0;
+            this.selectedLanguage = null;
+            this.recognition = null;
+            this.isListening = false;
+            this.startTime = null;
+            this.timer = null;
+            this.isSystemSpeaking = false;
+            this.callStartTime = null;
+            this.emotionHistory = [];
+            this.greetingDone = false;
+            
+            this.emailBuffer = "";
+            this.isCollectingEmail = false;
+            this.emailComplete = false;
+            
+            this.conversationData = {
+                patient: {},
+                appointment: {}
+            };
+            
+            // ENHANCED MESSAGES WITH PROPER GREETING FLOW
+            this.messages = {
+                en: {
+                    welcome: "Welcome to Smile Dental Clinic.",
+                    greeting: "We hope you are having a great day. I am here to help with booking appointments.",
+                    askName: "May I know your name please?",
+                    languageConfirm: "Perfect! You've selected English. Let's get started.",
+                    askPhone: "What's your phone number? Please say all 10 digits.",
+                    askAddress: "Could you please share your address?",
+                    askEmail: "What's your email address? You can say it naturally, like 'disha at gmail dot com'.",
+                    askService: "Which dental service do you need? Cleaning, Checkup, Filling, Root Canal, or Emergency?",
+                    askDate: "When would you like to visit? Today, tomorrow, or a specific date?",
+                    askTime: "What time works best? Morning, afternoon, or specific time?",
+                    confirm: "Great! Say 'yes' to confirm or 'no' to make changes.",
+                    booked: "Excellent! Your appointment has been booked successfully.",
+                    pleaseRepeat: "I didn't catch that. Please repeat.",
+                    emailCollected: "Got your email!",
+                    listening: "I'm listening...",
+                    processing: "Got it!"
+                },
+                hi: {
+                    welcome: "स्माइल डेंटल क्लिनिक में आपका स्वागत है।",
+                    greeting: "आशा है आपका दिन अच्छा चल रहा है। मैं अपॉइंटमेंट बुकिंग में आपकी मदद के लिए यहाँ हूँ।",
+                    askName: "कृपया अपना नाम बताइए।",
+                    languageConfirm: "बहुत अच्छा! आपने हिंदी चुनी है।",
+                    askPhone: "आपका फोन नंबर क्या है?",
+                    askAddress: "अपना पता बताएं?",
+                    askEmail: "ईमेल पता बताएं? 'disha at gmail dot com' जैसे बोलें।",
+                    askService: "कौन सी सेवा चाहिए?",
+                    askDate: "कब आना चाहेंगे?",
+                    askTime: "क्या समय सही रहेगा?",
+                    confirm: "'हाँ' कहें कन्फर्म करने के लिए",
+                    booked: "अपॉइंटमेंट बुक हो गई!",
+                    pleaseRepeat: "कृपया दोहराएं?",
+                    emailCollected: "ईमेल मिल गया!",
+                    listening: "सुन रहा हूँ...",
+                    processing: "समझ गया!"
+                },
+                kn: {
+                    welcome: "ಸ್ಮೈಲ್ ಡೆಂಟಲ್ ಕ್ಲಿನಿಕ್‌ಗೆ ಸ್ವಾಗತ.",
+                    greeting: "ನಿಮಗೆ ಒಳ್ಳೆಯ ದಿನವಾಗಿರಲಿ ಎಂದು ಆಶಿಸುತ್ತೇವೆ. ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್ ಬುಕ್ಕಿಂಗ್‌ಗೆ ನಾನು ಸಹಾಯ ಮಾಡಲು ಇಲ್ಲಿದ್ದೇನೆ.",
+                    askName: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರನ್ನು ತಿಳಿಸಬಹುದೇ?",
+                    languageConfirm: "ಅತ್ಯುತ್ತಮ! ನೀವು ಕನ್ನಡ ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ.",
+                    askPhone: "ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆ ಏನು?",
+                    askAddress: "ನಿಮ್ಮ ವಿಳಾಸ ಹೇಳಿ?",
+                    askEmail: "ಇಮೇಲ್ ಹೇಳಿ? 'disha at gmail dot com' ಎಂದು ಹೇಳಿ.",
+                    askService: "ಯಾವ ಸೇವೆ ಬೇಕು?",
+                    askDate: "ಯಾವಾಗ ಬರಲು ಬಯಸುತ್ತೀರಿ?",
+                    askTime: "ಯಾವ ಸಮಯ ಸರಿಯಾಗಿದೆ?",
+                    confirm: "'ಹೌದು' ಎಂದು ಹೇಳಿ ದೃಢೀಕರಿಸಲು",
+                    booked: "ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್ ಬುಕ್ ಆಗಿದೆ!",
+                    pleaseRepeat: "ದಯವಿಟ್ಟು ಪುನರಾವರ್ತಿಸಿ?",
+                    emailCollected: "ಇಮೇಲ್ ಸಿಕ್ಕಿತು!",
+                    listening: "ಕೇಳುತ್ತಿದ್ದೇನೆ...",
+                    processing: "ಅರ್ಥವಾಯಿತು!"
+                },
+                te: {
+                    welcome: "స్మైల్ డెంటల్ క్లినిక్‌కు స్వాగతం.",
+                    greeting: "మీ రోజు మంచిగా సాగుతుందని ఆశిస్తున్నాము. అపాయింట్‌మెంట్ బుకింగ్ కోసం నేను సహాయం చేస్తాను.",
+                    askName: "దయచేసి మీ పేరు చెప్పగలరా?",
+                    languageConfirm: "అద్భుతం! మీరు తెలుగు ఎంచుకున్నారు.",
+                    askPhone: "మీ ఫోన్ నంబర్ ఏమిటి?",
+                    askAddress: "మీ చిరునామా చెప్పండి?",
+                    askEmail: "ఇమెయిల్ చెప్పండి? 'disha at gmail dot com' అని చెప్పండి.",
+                    askService: "ఏ సేవ కావాలి?",
+                    askDate: "ఎప్పుడు రావాలనుకుంటున్నారు?",
+                    askTime: "ఏ సమయం సరిపోతుంది?",
+                    confirm: "'అవును' అని చెప్పండి",
+                    booked: "అపాయింట్‌మెంట్ బుక్ చేయబడింది!",
+                    pleaseRepeat: "దయచేసి మళ్లీ చెప్పండి?",
+                    emailCollected: "ఇమెయిల్ వచ్చింది!",
+                    listening: "వింటున్నాను...",
+                    processing: "అర్థమైంది!"
+                }
+            };
+        }
+
+        async startCall() {
+            if (this.isActive) return;
+            
+            try {
+                await navigator.mediaDevices.getUserMedia({ audio: true });
+                this.isActive = true;
+                this.currentStep = 0;
+                this.greetingDone = false;
+                this.emailBuffer = "";
+                this.isCollectingEmail = false;
+                this.callStartTime = new Date().getTime();
+                this.emotionHistory = [];
+                
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('endBtn').disabled = false;
+                document.getElementById('statusDisplay').classList.add('active');
+                document.getElementById('langModal').style.display = 'flex';
+                
+                this.startTimer();
+                this.addMessage('system', 'Welcome! Please select your language.');
+                showToast('Call started', 'success');
+            } catch (error) {
+                showToast('Please allow microphone access', 'error');
+                this.endCall();
+            }
+        }
+
+        processEmailInput(text) {
+            let cleaned = text.toLowerCase().trim();
+            
+            const bufferDiv = document.getElementById('emailBuffer');
+            const bufferText = document.getElementById('bufferText');
+            
+            if (this.emailBuffer) {
+                this.emailBuffer += " " + cleaned;
+            } else {
+                this.emailBuffer = cleaned;
+            }
+            
+            bufferText.textContent = this.emailBuffer;
+            bufferDiv.classList.add('show');
+            
+            console.log('📧 Email buffer (raw):', this.emailBuffer);
+            
+            const emailString = cleanMultilingualEmail(this.emailBuffer);
+            console.log('📧 Email parsed:', emailString);
+            
+            if (emailString) {
+                console.log('✅ Complete email detected:', emailString);
+                this.emailComplete = true;
+                this.isCollectingEmail = false;
+                
+                setTimeout(() => {
+                    bufferDiv.classList.remove('show');
+                }, 500);
+                
+                return emailString;
+            }
+            
+            return null;
+        }
+
+        initSpeechRecognition(langTag) {
+            if (!('webkitSpeechRecognition' in window)) {
+                showToast('Speech recognition not supported', 'error');
+                return false;
+            }
+            
+            this.recognition = new webkitSpeechRecognition();
+            this.recognition.continuous = false;
+            this.recognition.interimResults = true;
+            this.recognition.lang = langTag;
+            this.recognition.maxAlternatives = 1;
+            
+            this.recognition.onsoundend = () => {
+                setTimeout(() => {
+                    if (this.isCollectingEmail && !this.emailComplete && this.emailBuffer) {
+                        console.log('⏳ Still waiting for more email parts...');
+                        this.startListening();
+                    }
+                }, 800);
+            };
+            
+            this.recognition.onstart = () => {
+                this.isListening = true;
+                document.getElementById('listeningIndicator').classList.add('active');
+                document.getElementById('statusText').textContent = this.messages[this.selectedLanguage]?.listening || 'Listening...';
+            };
+            
+            this.recognition.onresult = (event) => {
+                let finalTranscript = '';
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                if (interimTranscript && this.isCollectingEmail) {
+                    const bufferText = document.getElementById('bufferText');
+                    bufferText.textContent = this.emailBuffer + ' ' + interimTranscript + ' (still listening...)';
+                }
+                
+                if (finalTranscript) {
+                    console.log('🎤 Final transcript:', finalTranscript);
+                    
+                    if (this.currentStep === 4) {
+                        const completeEmail = this.processEmailInput(finalTranscript);
+                        
+                        if (completeEmail) {
+                            this.conversationData.patient.email = completeEmail;
+                            this.updateDisplay('patientEmail', completeEmail);
+                            this.emailBuffer = "";
+                            this.emailComplete = false;
+                            
+                            this.speak(this.messages[this.selectedLanguage]?.emailCollected || "Got your email!", this.selectedLanguage);
+                            this.addMessage('system', this.messages[this.selectedLanguage]?.emailCollected || "Email received!");
+                            
+                            this.currentStep = 5;
+                            this.updateStepUI();
+                            setTimeout(() => this.askCurrentQuestion(), 1000);
+                        } else {
+                            this.speak("I heard: " + finalTranscript + ". Please continue with the rest of your email.", this.selectedLanguage);
+                            setTimeout(() => this.startListening(), 1500);
+                        }
+                    } else {
+                        const emotion = this.analyzeEmotion(finalTranscript);
+                        this.addMessage('user', finalTranscript, emotion);
+                        this.processUserInput(finalTranscript, emotion);
+                    }
+                }
+            };
+            
+            this.recognition.onerror = (event) => {
+                console.log('Recognition error:', event.error);
+                this.isListening = false;
+                document.getElementById('listeningIndicator').classList.remove('active');
+                
+                if (this.isActive && event.error !== 'aborted') {
+                    setTimeout(() => this.startListening(), 1000);
+                }
+            };
+            
+            this.recognition.onend = () => {
+                this.isListening = false;
+                document.getElementById('listeningIndicator').classList.remove('active');
+                
+                if (this.isActive && !this.isSystemSpeaking && this.currentStep === 4 && !this.emailComplete && this.isCollectingEmail) {
+                    console.log('🔄 Auto-restarting for more email input...');
+                    setTimeout(() => this.startListening(), 300);
+                } else if (this.isActive && !this.isSystemSpeaking) {
+                    setTimeout(() => this.startListening(), 500);
+                }
+            };
+            
+            this.startListening();
+            return true;
+        }
+
+        startListening() {
+            if (this.recognition && this.isActive && !this.isListening && !this.isSystemSpeaking) {
+                try {
+                    this.recognition.start();
+                } catch (e) {
+                    console.log('Start error:', e);
+                }
+            }
+        }
+
+        stopListening() {
+            if (this.recognition && this.isListening) {
+                try {
+                    this.recognition.stop();
+                } catch (e) {}
+                this.isListening = false;
+                document.getElementById('listeningIndicator').classList.remove('active');
+            }
+        }
+
+        speak(text, lang) {
+            if (!window.speechSynthesis) return;
+            
+            this.stopListening();
+            this.isSystemSpeaking = true;
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            switch(lang) {
+                case 'hi': utterance.lang = 'hi-IN'; break;
+                case 'kn': utterance.lang = 'kn-IN'; break;
+                case 'te': utterance.lang = 'te-IN'; break;
+                default: utterance.lang = 'en-US';
+            }
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            
+            utterance.onstart = () => {
+                document.getElementById('statusText').textContent = 'Speaking...';
+            };
+            
+            utterance.onend = () => {
+                this.isSystemSpeaking = false;
+                document.getElementById('statusText').textContent = 'Listening...';
+                if (this.isActive) {
+                    setTimeout(() => this.startListening(), 500);
+                }
+            };
+            
+            utterance.onerror = () => {
+                this.isSystemSpeaking = false;
+                if (this.isActive) {
+                    setTimeout(() => this.startListening(), 800);
+                }
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        analyzeEmotion(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('yes') || lower.includes('good') || lower.includes('great') || lower.includes('thank')) return 'happy';
+            if (lower.includes('no') || lower.includes('bad') || lower.includes('pain') || lower.includes('hurt')) return 'sad';
+            return 'neutral';
+        }
+
+        getQuestionForStep() {
+            if (!this.selectedLanguage) return null;
+            
+            if (!this.greetingDone && this.currentStep === 1) {
+                const welcomeMsg = this.messages[this.selectedLanguage].welcome;
+                const greetingMsg = this.messages[this.selectedLanguage].greeting;
+                const askNameMsg = this.messages[this.selectedLanguage].askName;
+                return `${welcomeMsg} ${greetingMsg} ${askNameMsg}`;
+            }
+            
+            const steps = [null,
+                this.messages[this.selectedLanguage].askName,
+                this.messages[this.selectedLanguage].askPhone,
+                this.messages[this.selectedLanguage].askAddress,
+                this.messages[this.selectedLanguage].askEmail,
+                this.messages[this.selectedLanguage].askService,
+                this.messages[this.selectedLanguage].askDate,
+                this.messages[this.selectedLanguage].askTime,
+                this.messages[this.selectedLanguage].confirm
+            ];
+            return steps[this.currentStep];
+        }
+
+        askCurrentQuestion() {
+            if (!this.isActive || !this.selectedLanguage) return;
+            
+            const msg = this.getQuestionForStep();
+            if (msg) {
+                this.speak(msg, this.selectedLanguage);
+                this.addMessage('system', msg);
+                
+                if (this.currentStep === 1 && !this.greetingDone) {
+                    this.greetingDone = true;
+                }
+                
+                if (this.currentStep === 4) {
+                    this.isCollectingEmail = true;
+                    this.emailBuffer = "";
+                    this.emailComplete = false;
+                    document.getElementById('instructionText').textContent = 'Say your email naturally, like "disha at gmail dot com". I\'ll keep listening until you\'re done.';
+                } else {
+                    this.isCollectingEmail = false;
+                    const instructions = {
+                        1: 'Say your full name',
+                        2: 'Say your 10-digit phone number',
+                        3: 'Say your address',
+                        5: 'Choose a service: Cleaning, Checkup, Filling, Root Canal, Emergency',
+                        6: 'Say date: Today, Tomorrow, or specific date',
+                        7: 'Say time: Morning, Afternoon, Evening, or specific time',
+                        8: 'Say "yes" to confirm'
+                    };
+                    document.getElementById('instructionText').textContent = instructions[this.currentStep] || 'Please speak clearly';
+                }
+            }
+        }
+
+        processUserInput(text, emotion) {
+            const lower = text.toLowerCase().trim();
+            
+            switch(this.currentStep) {
+                case 1:
+                    if (text.length >= 2) {
+                        const formattedName = text.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+                        this.conversationData.patient.name = formattedName;
+                        this.updateDisplay('patientName', formattedName);
+                        this.currentStep = 2;
+                        this.updateStepUI();
+                        setTimeout(() => this.askCurrentQuestion(), 1000);
+                    } else {
+                        this.handleRecognitionError();
+                    }
+                    break;
+                    
+                case 2:
+                    const digits = text.replace(/\D/g, '');
+                    if (digits.length >= 10) {
+                        const phone = digits.slice(-10);
+                        this.conversationData.patient.phone = phone;
+                        this.updateDisplay('patientPhone', phone);
+                        this.currentStep = 3;
+                        this.updateStepUI();
+                        setTimeout(() => this.askCurrentQuestion(), 1000);
+                    } else {
+                        this.handleRecognitionError();
+                    }
+                    break;
+                    
+                case 3:
+                    if (text.trim().length >= 3) {
+                        this.conversationData.patient.address = text.trim();
+                        this.updateDisplay('patientAddress', text.trim());
+                        this.currentStep = 4;
+                        this.updateStepUI();
+                        setTimeout(() => this.askCurrentQuestion(), 1000);
+                    } else {
+                        this.handleRecognitionError();
+                    }
+                    break;
+                    
+                case 5:
+                    const services = ['cleaning', 'checkup', 'filling', 'root canal', 'emergency', 'consultation', 'whitening', 'extraction'];
+                    const serviceNames = ['Teeth Cleaning', 'Dental Checkup', 'Tooth Filling', 'Root Canal Treatment', 'Emergency Care', 'Consultation', 'Teeth Whitening', 'Tooth Extraction'];
+                    
+                    for (let i = 0; i < services.length; i++) {
+                        if (lower.includes(services[i])) {
+                            this.conversationData.appointment.service = serviceNames[i];
+                            this.updateDisplay('appointmentService', serviceNames[i]);
+                            this.currentStep = 6;
+                            this.updateStepUI();
+                            setTimeout(() => this.askCurrentQuestion(), 1000);
+                            return;
+                        }
+                    }
+                    this.handleRecognitionError();
+                    break;
+                    
+                case 6:
+                    let date = 'Tomorrow';
+                    if (lower.includes('today')) date = 'Today';
+                    else if (lower.includes('tomorrow')) date = 'Tomorrow';
+                    else {
+                        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                        let found = false;
+                        for (let day of days) {
+                            if (lower.includes(day)) {
+                                date = day.charAt(0).toUpperCase() + day.slice(1);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            const dayMatch = lower.match(/(\d{1,2})(?:st|nd|rd|th)?/);
+                            if (dayMatch) date = dayMatch[1];
+                        }
+                    }
+                    this.conversationData.appointment.date = date;
+                    this.updateDisplay('appointmentDateTime', date);
+                    this.currentStep = 7;
+                    this.updateStepUI();
+                    setTimeout(() => this.askCurrentQuestion(), 1000);
+                    break;
+                    
+                case 7:
+                    let time = '09:00 AM';
+                    if (lower.includes('morning')) time = '09:00 AM';
+                    else if (lower.includes('afternoon')) time = '02:00 PM';
+                    else if (lower.includes('evening')) time = '05:00 PM';
+                    else {
+                        const timeMatch = lower.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+                        if (timeMatch) {
+                            let hour = parseInt(timeMatch[1]);
+                            const minute = timeMatch[2] || '00';
+                            let period = timeMatch[3] ? timeMatch[3].toLowerCase() : (hour < 12 ? 'am' : 'pm');
+                            
+                            if (period === 'pm' && hour < 12) hour += 12;
+                            if (period === 'am' && hour === 12) hour = 0;
+                            
+                            const displayHour = hour % 12 || 12;
+                            time = `${displayHour}:${minute} ${period.toUpperCase()}`;
+                        }
+                    }
+                    this.conversationData.appointment.time = time;
+                    const dateTime = `${this.conversationData.appointment.date || ''} at ${time}`;
+                    this.updateDisplay('appointmentDateTime', dateTime);
+                    this.currentStep = 8;
+                    this.updateStepUI();
+                    setTimeout(() => this.askCurrentQuestion(), 1000);
+                    break;
+                    
+                case 8:
+                    if (lower.includes('yes') || lower.includes('confirm') || lower.includes('ok') || lower.includes('yeah') || lower.includes('sure')) {
+                        this.saveAppointment();
+                    } else {
+                        this.currentStep = 5;
+                        this.updateStepUI();
+                        this.speak("Let's go back and review your appointment details.", this.selectedLanguage);
+                        setTimeout(() => this.askCurrentQuestion(), 2000);
+                    }
+                    break;
+            }
+        }
+
+        handleRecognitionError() {
+            this.speak(this.messages[this.selectedLanguage]?.pleaseRepeat || 'Please repeat.', this.selectedLanguage);
+            this.showToastMessage('I didn\'t understand. Please try again.', 'warning');
+        }
+
+        addMessage(sender, text, emotion = 'neutral') {
+            const transcript = document.getElementById('transcript');
+            const message = document.createElement('div');
+            message.className = `message ${sender}`;
+            message.innerHTML = `
+                <div class="message-header">
+                    <span class="message-sender">${sender === 'system' ? 'System' : 'Patient'}</span>
+                    <span class="message-time">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                </div>
+                <div class="message-text">${this.escapeHtml(text)}</div>
+            `;
+            transcript.appendChild(message);
+            message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        updateDisplay(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = value;
+                element.style.color = '#1F2937';
+            }
+            const statusElem = document.getElementById('appointmentStatus');
+            if (statusElem) statusElem.innerHTML = '🔄 IN PROGRESS';
+        }
+
+        updateStepUI() {
+            const stepElem = document.getElementById('currentStep');
+            if (stepElem) stepElem.textContent = `${this.currentStep}/8`;
+            const progress = (this.currentStep / 8) * 100;
+            const fillElem = document.getElementById('progressFill');
+            if (fillElem) fillElem.style.width = `${progress}%`;
+        }
+
+        startTimer() {
+            this.startTime = new Date();
+            this.timer = setInterval(() => {
+                const diff = Math.floor((new Date() - this.startTime) / 1000);
+                const min = Math.floor(diff / 60).toString().padStart(2, '0');
+                const sec = (diff % 60).toString().padStart(2, '0');
+                const timerElem = document.getElementById('callTimer');
+                if (timerElem) timerElem.textContent = `${min}:${sec}`;
+                const displayElem = document.getElementById('callTimerDisplay');
+                if (displayElem) displayElem.textContent = `${min}:${sec}`;
+            }, 1000);
+        }
+
+        saveAppointment() {
+            const confirmId = 'APT' + Date.now().toString().slice(-8);
+            const confirmElem = document.getElementById('confirmationId');
+            if (confirmElem) confirmElem.textContent = confirmId;
+            const statusElem = document.getElementById('appointmentStatus');
+            if (statusElem) statusElem.innerHTML = '✅ CONFIRMED';
+            
+            const appointmentData = {
+                confirmation_id: confirmId,
+                timestamp: new Date().toISOString(),
+                patient: {
+                    name: this.conversationData.patient.name || 'Not provided',
+                    phone: this.conversationData.patient.phone || 'Not provided',
+                    email: this.conversationData.patient.email || 'Not provided',
+                    address: this.conversationData.patient.address || 'Not provided'
+                },
+                appointment: {
+                    service: this.conversationData.appointment.service || 'General Checkup',
+                    date: this.conversationData.appointment.date || new Date().toISOString().split('T')[0],
+                    time: this.conversationData.appointment.time || '09:00 AM'
+                },
+                lang: this.selectedLanguage || 'en',
+                status: 'confirmed',
+                call_duration_seconds: Math.floor((new Date() - this.callStartTime) / 1000)
+            };
+            
+            localStorage.setItem('lastAppointment', JSON.stringify(appointmentData));
+            localStorage.setItem(`appointment_${confirmId}`, JSON.stringify(appointmentData));
+            
+            const allAppointments = JSON.parse(localStorage.getItem('allAppointments') || '[]');
+            allAppointments.push(appointmentData);
+            localStorage.setItem('allAppointments', JSON.stringify(allAppointments));
+            
+            console.log('✅ Appointment saved:', appointmentData);
+            console.log('📊 Total appointments saved:', allAppointments.length);
+            
+            this.speak(this.messages[this.selectedLanguage].booked, this.selectedLanguage);
+            this.addMessage('system', `Appointment confirmed! ID: ${confirmId}`);
+            this.showToastMessage(`Appointment confirmed! ID: ${confirmId}`, 'success');
+            
+            setTimeout(() => this.endCall(), 4000);
+        }
+        
+        showToastMessage(message, type) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        selectLanguage(lang) {
+            this.selectedLanguage = lang;
+            const modal = document.getElementById('langModal');
+            if (modal) modal.style.display = 'none';
+            
+            const langNames = { en: 'English', hi: 'हिंदी', kn: 'ಕನ್ನಡ', te: 'తెలుగు' };
+            const langElem = document.getElementById('currentLang');
+            if (langElem) langElem.textContent = langNames[lang];
+            
+            this.currentStep = 1;
+            this.greetingDone = false;
+            this.updateStepUI();
+            
+            let langTag = 'en-US';
+            if (lang === 'hi') langTag = 'hi-IN';
+            else if (lang === 'kn') langTag = 'kn-IN';
+            else if (lang === 'te') langTag = 'te-IN';
+            
+            this.initSpeechRecognition(langTag);
+            setTimeout(() => this.askCurrentQuestion(), 1000);
+        }
+
+        endCall() {
+            if (!this.isActive) return;
+            this.isActive = false;
+            
+            this.stopListening();
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            if (this.timer) clearInterval(this.timer);
+            
+            const startBtn = document.getElementById('startBtn');
+            const endBtn = document.getElementById('endBtn');
+            if (startBtn) startBtn.disabled = false;
+            if (endBtn) endBtn.disabled = true;
+            
+            const listeningIndicator = document.getElementById('listeningIndicator');
+            if (listeningIndicator) listeningIndicator.classList.remove('active');
+            const statusDisplay = document.getElementById('statusDisplay');
+            if (statusDisplay) statusDisplay.classList.remove('active');
+            const emailBuffer = document.getElementById('emailBuffer');
+            if (emailBuffer) emailBuffer.classList.remove('show');
+            
+            this.showToastMessage('Call ended', 'success');
+        }
+        
+        showDebugPanel() {
+            const allAppointments = JSON.parse(localStorage.getItem('allAppointments') || '[]');
+            const lastAppointment = JSON.parse(localStorage.getItem('lastAppointment') || '{}');
+            
+            const debugInfo = `
+                🔧 DEBUG PANEL\n
+                ================\n
+                📊 Total Appointments: ${allAppointments.length}\n
+                📝 Last Appointment: ${lastAppointment.confirmation_id || 'None'}\n
+                🌐 Selected Language: ${this.selectedLanguage || 'None'}\n
+                📍 Current Step: ${this.currentStep}/8\n
+                🎤 Listening: ${this.isListening ? 'Yes' : 'No'}\n
+                🗣️ Speaking: ${this.isSystemSpeaking ? 'Yes' : 'No'}\n
+                📧 Email Buffer: ${this.emailBuffer || 'Empty'}\n
+                ================\n
+                💾 Check console for full appointment data
+            `;
+            
+            console.log('🔍 DEBUG INFO:');
+            console.log('Appointments:', allAppointments);
+            console.log('Last Appointment:', lastAppointment);
+            console.log('Conversation Data:', this.conversationData);
+            console.log('Emotion History:', this.emotionHistory);
+            
+            alert(debugInfo);
+            this.showToastMessage('Debug info logged to console', 'info');
+        }
+    }
+
+    const voiceAI = new DentalVoiceAI();
+    window.voiceAI = voiceAI;
+    
+    function startCall() { voiceAI.startCall(); }
+    function endCall() { voiceAI.endCall(); }
+    function selectLanguage(lang) { voiceAI.selectLanguage(lang); }
+    
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+    
+    function clearTranscript() {
+        const transcript = document.getElementById('transcript');
+        if (transcript) {
+            transcript.innerHTML = '<div class="message system"><div class="message-header"><span>System</span><span>--:--</span></div><div class="message-text">Transcript cleared.</div></div>';
+        }
+        showToast('Transcript cleared', 'success');
+    }
+    
+    function exportTranscript() {
+        const messages = document.querySelectorAll('.message-text');
+        let text = 'Smile Dental Clinic - Conversation Transcript\n';
+        text += `Generated: ${new Date().toLocaleString()}\n`;
+        text += '='.repeat(50) + '\n\n';
+        
+        messages.forEach(msg => {
+            text += msg.textContent + '\n';
+        });
+        
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `transcript-${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('Transcript exported', 'success');
+    }
+    
+    // Mobile navigation for responsive design
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('✅ Smile Dental Clinic AI Ready');
+        showToast('System ready. Click the phone to start.', 'success');
+        
+        // Check if running on mobile
+        if (window.innerWidth <= 768) {
+            console.log('📱 Mobile mode activated');
+        }
+    });
+    </script>
+</body>
+</html>
